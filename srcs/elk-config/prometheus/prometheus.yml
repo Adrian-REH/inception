@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s # Intervalo de scraping por defecto.
+
+scrape_configs:
+  # Monitorea Prometheus
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  # Monitorea Node Exporter
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+
+

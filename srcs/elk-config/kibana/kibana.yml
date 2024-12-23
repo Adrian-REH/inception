@@ -1,0 +1,6 @@
+elasticsearch.ssl.verificationMode: none
+monitoring.ui.container.elasticsearch.enabled: true
+server.name: kibana
+server.host: "0.0.0.0"
+elasticsearch.username: "elastic"
+elasticsearch.password: "adrian2313"
