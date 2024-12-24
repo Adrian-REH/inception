@@ -1,5 +1,4 @@
-FROM prom/node-exporter:latest
+FROM quay.io/prometheus/node-exporter:latest
 
 EXPOSE 9100
 
-CMD ["/bin/node_exporter"]
