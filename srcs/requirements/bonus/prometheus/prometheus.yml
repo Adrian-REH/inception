@@ -1,5 +1,6 @@
 global:
   scrape_interval: 15s # Intervalo de scraping por defecto.
+  evaluation_interval: 15s # Intervalo de evaluación de reglas
 
 scrape_configs:
   # Monitorea Prometheus
