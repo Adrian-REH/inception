@@ -6,7 +6,7 @@ services:
     ports:
       - "5044:5044/udp"
     volumes:
-      - ./elk-config/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./requirements/bonus/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
       - ls_data:/usr/share/logstash/data
     networks:
       - wordpress_network
@@ -49,7 +49,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./elk-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./requirements/bonus/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - metrics_network
     restart: always
@@ -60,7 +60,7 @@ services:
     networks:
       - metrics_network
     volumes:
-      - ./elk-config/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./requirements/bonus/grafana/datasources:/etc/grafana/provisioning/datasources
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin # Cambia esto en producción
