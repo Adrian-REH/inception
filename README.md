@@ -1,8 +1,14 @@
 # Description memory
 
+## Infra-structure diagram
+
+![alt text](image.png)
+
 
 
 # Inception
 
 
-![alt text](image.png)
+# config
+
+
