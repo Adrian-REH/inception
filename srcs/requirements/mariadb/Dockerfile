@@ -1,10 +1,14 @@
 FROM mariadb:latest
 
-ENV MYSQL_ROOT_PASSWORD=root_password
-ENV MYSQL_DATABASE=my_database
-ENV MYSQL_USER=my_user
-ENV MYSQL_PASSWORD=my_password
 
 EXPOSE 3306
 
-CMD ["mysqld"]
+RUN apt-get update && apt-get install -y gettext-base
+
+COPY /requirements/mariadb/tools/init.sql /docker-entrypoint-initdb.d/init.sql
+COPY /requirements/mariadb/tools/init.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/init.sh
+
+RUN init.sh
+

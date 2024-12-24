@@ -130,30 +130,29 @@ services:
         gelf-address: "udp://127.0.0.1:5044"
 
   db:
-    image: mysql:8.0
-    restart: always
+    build:
+      context: .
+      dockerfile: ./requirements/mariadb/Dockerfile
     container_name: mariadb
     env_file:
       - ./.env
-    volumes:
-      - /home/login/data:/var/lib/mysql # Verificar la direccion /home/
     networks:
       - wordpress_network
-    healthcheck:
-      test: curl --fail http://localhost:5000/ || exit 1
-      interval: 40s
-      timeout: 30s
-      retries: 3
-      start_period: 60s
-    logging: # Configuración de logs
-      driver: "gelf"
-      options:
-        gelf-address: "udp://127.0.0.1:5044"
+    volumes:
+      - db_data:/var/lib/mysql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - wordpress_network
 
 volumes:
   test_data:
   ls_data:
   kb_data:
+  db_data:
 
 networks:
   wordpress_network:
