@@ -1,0 +1,24 @@
+# Configuración básica de Kibana
+
+# Puerto en el que Kibana escuchará
+server.port: 5601
+
+# Dirección IP o hostname en el que Kibana escuchará
+server.host: "0.0.0.0"
+
+# URL de Elasticsearch
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+
+
+
+# Habilitar SSL/TLS (opcional, comenta si no lo usas)
+# server.ssl.enabled: true
+# server.ssl.certificate: /path/to/your/certificate.crt
+# server.ssl.key: /path/to/your/certificate.key
+
+# Configuración de seguridad (si Elasticsearch tiene seguridad habilitada)
+# elasticsearch.username: "kibana_system"
+# elasticsearch.password: "tu_contraseña"
+
+# Deshabilitar el sandbox de Chromium (como se mencionó en los logs)
+xpack.screenshotting.browser.chromium.disableSandbox: true
