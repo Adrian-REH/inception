@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y \
     php \
     php-mysql \
     wget \
+    tar \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Descarga WordPress

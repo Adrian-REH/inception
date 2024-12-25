@@ -89,6 +89,8 @@ services:
     restart: always
     env_file:
       - ./.env
+    ports:
+      - "9090:80"
     volumes:
       - /home/login/data:/var/www/html
     networks:
@@ -115,7 +117,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/lohin/data:/var/www/html
+      - /home/login/data:/var/www/html
     depends_on:
       - wordpress
     networks:
