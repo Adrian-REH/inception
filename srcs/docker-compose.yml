@@ -1,88 +1,90 @@
 services:
 
-  logstash:
-    build:
-      context: .
-      dockerfile: ./requirements/bonus/logstash/Dockerfile
-    container_name: logstash
-    networks:
-      - wordpress_network
-    ports:
-      - "5044:5044/udp"
-    volumes:
-      - ls_data:/usr/share/logstash/data
-    depends_on:
-      - elasticsearch
-    healthcheck:
-      test: curl --fail http://logstash:9600/_node/stats || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+  # logstash:
+  #   build:
+  #     context: .
+  #     dockerfile: ./requirements/bonus/logstash/Dockerfile
+  #   container_name: logstash
+  #   networks:
+  #     - wordpress_network
+  #   ports:
+  #     - "5044:5044/udp"
+  #   volumes:
+  #     - ls_data:/usr/share/logstash/data
+  #   depends_on:
+  #     - elasticsearch
+  #   healthcheck:
+  #     test: curl --fail http://logstash:9600/_node/stats || exit 1
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 60s
 
-  elasticsearch:
-    build:
-      context: .
-      dockerfile: ./requirements/bonus/elasticsearch/Dockerfile
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "ELASTIC_PASSWORD=adrian2313"
-    networks:
-      - wordpress_network
-    volumes:
-      - test_data:/usr/share/elasticsearch/data/
+  # elasticsearch:
+  #   build:
+  #     context: .
+  #     dockerfile: ./requirements/bonus/elasticsearch/Dockerfile
+  #   container_name: elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #     - "ELASTIC_PASSWORD=adrian2313"
+  #   networks:
+  #     - wordpress_network
+  #   volumes:
+  #     - test_data:/usr/share/elasticsearch/data/
 
-  kibana:
-    build:
-      context: .
-      dockerfile: ./requirements/bonus/kibana/Dockerfile
-    image: docker.elastic.co/kibana/kibana:8.10.2
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
-    networks:
-      - wordpress_network
-    depends_on:
-      - elasticsearch
-    volumes:
-      - kb_data:/usr/share/kibana/data
+  # kibana:
+  #   build:
+  #     context: .
+  #     dockerfile: ./requirements/bonus/kibana/Dockerfile
+  #   container_name: kibana
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  #     - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+  #   networks:
+  #     - wordpress_network
+  #   depends_on:
+  #     - elasticsearch
+  #   volumes:
+  #     - kb_data:/usr/share/kibana/data
 
-  prometheus:
-    build:
-      context: .
-      dockerfile: ./requirements/bonus/prometheus/Dockerfile
-    container_name: prometheus
-    networks:
-      - metrics_network
-    restart: always
+  # prometheus:
+  #   build:
+  #     context: .
+  #     dockerfile: ./requirements/bonus/prometheus/Dockerfile
+  #   container_name: prometheus
+  #   networks:
+  #     - metrics_network
+  #   restart: always
 
-  grafana:
-    build:
-      context: .
-      dockerfile: ./requirements/bonus/grafana/Dockerfile
-    container_name: grafana
-    networks:
-      - metrics_network
-    volumes:
-      - ./requirements/bonus/grafana/datasources:/etc/grafana/provisioning/datasources
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin # Cambia esto en producción
-    restart: always
+  # grafana:
+  #   build:
+  #     context: .
+  #     dockerfile: ./requirements/bonus/grafana/Dockerfile
+  #   container_name: grafana
+  #   networks:
+  #     - metrics_network
+  #   volumes:
+  #     - ./requirements/bonus/grafana/datasources:/etc/grafana/provisioning/datasources
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin # Cambia esto en producción
+  #   restart: always
 
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node-exporter
-    networks:
-      - metrics_network
-    restart: always
+  # node-exporter:
+  #   image: prom/node-exporter:latest
+  #   container_name: node-exporter
+  #   networks:
+  #     - metrics_network
+  #   restart: always
+
 
   wordpress:
-    image: wordpress
+    build:
+      context: .
+      dockerfile: ./requirements/wordpress/Dockerfile
     container_name: wordpress
     restart: always
     env_file:
@@ -98,12 +100,11 @@ services:
       retries: 3
       start_period: 60s
     depends_on: # Dependencias de wordpress
-      - logstash
       - db
-    logging: # Configuración de logs
-      driver: "gelf"
-      options:
-        gelf-address: "udp://127.0.0.1:5044"
+    # logging: # Configuración de logs
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://127.0.0.1:5044"
 
   nginx:
     build:
@@ -117,17 +118,13 @@ services:
       - /home/lohin/data:/var/www/html
     depends_on:
       - wordpress
-      - kibana
-      - grafana
-      - elasticsearch
-      - prometheus
     networks:
       - wordpress_network
       - metrics_network
-    logging: # Configuración de logs
-      driver: "gelf"
-      options:
-        gelf-address: "udp://127.0.0.1:5044"
+    # logging: # Configuración de logs
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://127.0.0.1:5044"
 
   db:
     build:
