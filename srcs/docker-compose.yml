@@ -140,6 +140,7 @@ services:
       - wordpress_network
     volumes:
       - db_data:/var/lib/mysql
+
   adminer:
     image: adminer
     restart: always
