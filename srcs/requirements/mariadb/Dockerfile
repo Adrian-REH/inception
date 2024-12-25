@@ -1,5 +1,5 @@
 # Usar una imagen base de Debian
-FROM debian:latest
+FROM debian:bookworm-slim
 
 # Establecer variables de entorno
 ENV DEBIAN_FRONTEND=noninteractive
