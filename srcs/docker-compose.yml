@@ -91,8 +91,6 @@ services:
       - ./.env
     ports:
       - "9090:80"
-    volumes:
-      - /home/login/data:/var/www/html
     networks:
       - wordpress_network
     healthcheck:
@@ -154,6 +152,7 @@ services:
 volumes:
   test_data:
   ls_data:
+  wp_data:
   kb_data:
   db_data:
 
