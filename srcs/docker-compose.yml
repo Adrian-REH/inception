@@ -139,10 +139,13 @@ services:
       - db_data:/var/lib/mysql
 
   adminer:
-    image: adminer
+    build:
+      context: .
+      dockerfile: ./requirements/bonus/adminer/Dockerfile
+    container_name: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 8080:80
     networks:
       - wordpress_network
 
