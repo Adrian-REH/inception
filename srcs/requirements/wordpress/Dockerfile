@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
+
 # Descarga WordPress
 RUN wget -O wordpress.tar.gz https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz \
     && tar -xzf wordpress.tar.gz -C /var/www/html --strip-components=1 \
@@ -42,8 +43,10 @@ RUN a2enmod proxy proxy_fcgi
 COPY /requirements/wordpress/tools/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default.conf
 
+RUN sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 9000|g' /etc/php/8.2/fpm/pool.d/www.conf
+
 # Expone el puerto 80
-EXPOSE 80
+EXPOSE 9000
 
 COPY /requirements/wordpress/tools/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
