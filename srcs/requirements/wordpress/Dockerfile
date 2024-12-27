@@ -1,61 +1,27 @@
-# Usa debian:bookworm-slim como base
-FROM debian:bookworm-slim
+# Usa Debian Buster como base
+FROM debian:buster
 
-# Establece las variables de entorno necesarias
-ENV DEBIAN_FRONTEND=noninteractive \
-    WORDPRESS_VERSION=6.3.2 \
-    PHP_UPLOAD_MAX_FILESIZE=64M \
-    PHP_POST_MAX_SIZE=64M \
-    PHP_MEMORY_LIMIT=256M \
-    PHP_MAX_EXECUTION_TIME=300
-
-# Instala las dependencias necesarias
 RUN apt-get update && apt-get install -y \
-    apache2 \
-    php8.2-fpm \
-    php8.2-mysql \
     curl \
-    wget \
-    tar \
+    php-fpm \
+    php-mysql \
     unzip \
-    mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Descarga WordPress
-RUN wget -O wordpress.tar.gz https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz \
-    && tar -xzf wordpress.tar.gz -C /var/www/html --strip-components=1 \
-    && rm wordpress.tar.gz \
-    && chown -R www-data:www-data /var/www/html \
-    && apt-get purge -y --auto-remove wget \
-    && ln -sf /dev/stdout /var/log/apache2/access.log \
-    && ln -sf /dev/stderr /var/log/apache2/error.log 
+RUN mkdir -p /var/www/html \
+    && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
 
-# Configura Apache
-RUN a2enmod rewrite \
-    && echo '<Directory /var/www/html/>\n\
-        Options +FollowSymLinks\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>' > /etc/apache2/conf-available/wordpress.conf \
-    && a2enconf wordpress
+WORKDIR /var/www/html
 
-RUN a2enmod proxy proxy_fcgi
+RUN wp core download --allow-root
 
-RUN sed -i 's/Listen 80/Listen 9000/' /etc/apache2/ports.conf
-
-COPY /requirements/wordpress/tools/000-default.conf /etc/apache2/sites-available/000-default.conf
-RUN a2ensite 000-default.conf
-
-
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# Expone el puerto 80
-EXPOSE 9000
-
+COPY /requirements/wordpress/tools/wp-config.php /var/www/html/wp-config.php
 COPY /requirements/wordpress/tools/entrypoint.sh /entrypoint.sh
+
 RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+EXPOSE 9000
 
-# Define el punto de entrada
-
+CMD ["/entrypoint.sh"]

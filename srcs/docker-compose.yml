@@ -86,19 +86,10 @@ services:
       context: .
       dockerfile: ./requirements/wordpress/Dockerfile
     container_name: wordpress
-    restart: always
     env_file:
       - ./.env
-    ports:
-      - "9000:9000"
     networks:
       - wordpress_network
-    healthcheck:
-      test: curl --fail http://localhost:9000/ || exit 1
-      interval: 40s
-      timeout: 30s
-      retries: 3
-      start_period: 60s
     depends_on: # Dependencias de wordpress
       - db
     # logging: # Configuración de logs
@@ -114,6 +105,7 @@ services:
     restart: always
     ports:
       - "443:443"
+      - "80:80"
     volumes:
       - /home/login/data:/var/www/html
     depends_on:
