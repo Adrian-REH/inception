@@ -89,6 +89,8 @@ services:
     restart: always
     env_file:
       - ./.env
+    ports:
+      - "9000:9000"
     networks:
       - wordpress_network
     healthcheck:

@@ -21,13 +21,14 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
-
 # Descarga WordPress
 RUN wget -O wordpress.tar.gz https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz \
     && tar -xzf wordpress.tar.gz -C /var/www/html --strip-components=1 \
     && rm wordpress.tar.gz \
     && chown -R www-data:www-data /var/www/html \
-    && apt-get purge -y --auto-remove wget
+    && apt-get purge -y --auto-remove wget \
+    && ln -sf /dev/stdout /var/log/apache2/access.log \
+    && ln -sf /dev/stderr /var/log/apache2/error.log 
 
 # Configura Apache
 RUN a2enmod rewrite \
@@ -40,10 +41,13 @@ RUN a2enmod rewrite \
 
 RUN a2enmod proxy proxy_fcgi
 
+RUN sed -i 's/Listen 80/Listen 9000/' /etc/apache2/ports.conf
+
 COPY /requirements/wordpress/tools/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default.conf
 
-RUN sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 9000|g' /etc/php/8.2/fpm/pool.d/www.conf
+
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Expone el puerto 80
 EXPOSE 9000
