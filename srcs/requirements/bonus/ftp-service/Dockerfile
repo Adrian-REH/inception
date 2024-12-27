@@ -1,15 +1,22 @@
 FROM debian:bookworm-slim
 
+# Establecer el entorno para evitar preguntas interactivas durante la instalación
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
+# Instalar vsftpd
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     vsftpd \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/run/vsftpd/empty
+# Crear el directorio necesario para la configuración de vsftpd
+RUN mkdir -p /etc/vsftpd
 
-COPY vsftpd.conf /etc/vsftpd.conf
+# Copiar el archivo de configuración y el script de entrada al contenedor
+COPY /requirements/bonus/ftp-service/tools/vsftpd.conf /tmp/vsftpd.conf
+COPY /requirements/bonus/ftp-service/tools/entrypoint.sh /tmp/entrypoint.sh
 
-EXPOSE 20 21 21100-21110
+# Asegurarse de que el script de entrada sea ejecutable
+RUN chmod +x /tmp/entrypoint.sh
 
-CMD ["vsftpd", "/etc/vsftpd.conf"]
+# Iniciar vsftpd con el archivo de configuración copiado
+ENTRYPOINT ["sh", "/tmp/entrypoint.sh"]

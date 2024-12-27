@@ -140,6 +140,19 @@ services:
       - 8080:80
     networks:
       - wordpress_network
+  ftp:
+    build:
+      context: .
+      dockerfile: ./requirements/bonus/ftp-service/Dockerfile
+    container_name: ftp
+    env_file:
+      - ./.env
+    ports:
+      - "21:21"
+    volumes:
+      - /home/login/data:/var/www/html
+    networks:
+      - wordpress_network
 
 volumes:
   test_data:
