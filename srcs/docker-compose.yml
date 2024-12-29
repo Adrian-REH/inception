@@ -92,6 +92,7 @@ services:
       - wordpress_network
     depends_on: # Dependencias de wordpress
       - db
+      - redis
     # logging: # Configuración de logs
     #   driver: "gelf"
     #   options:
@@ -149,11 +150,24 @@ services:
       - ./.env
     ports:
       - "21:21"
+      - "20:20"
+      - "21100-21110:21100-21110"
     volumes:
       - /home/login/data:/var/www/html
     networks:
       - wordpress_network
 
+  redis:
+    container_name: redis
+    build:
+      context: .
+      dockerfile:  /requirements/bonus/redis/Dockerfile
+    networks:
+      - wordpress_network
+    ports:
+      - "11211:11211"
+    env_file:
+      - ./.env
 volumes:
   test_data:
   ls_data:

@@ -2,7 +2,6 @@
 
 set -e
 
-if wp core is-installed --allow-root; then
     echo "Config WordPress..."
 
     wp core install \
@@ -36,17 +35,15 @@ if wp core is-installed --allow-root; then
 	fi
 
     # Instala y activa el tema
-    #wp theme install astra --activate --allow-root
+    wp theme install astra --activate --allow-root
 
     # Instala y activa plugins
-    #wp plugin install redis-cache --activate --allow-root
+    wp plugin install redis-cache --activate --allow-root
     wp plugin update --all --allow-root
 
     # Habilita Redis Cache
-    #wp redis enable --allow-root
-else
-    echo "WordPress ya está instalado."
-fi
+    wp redis enable --allow-root
+
 
 sed -i 's/listen = \/run\/php\/php7.3-fpm.sock/listen = 9000/g' /etc/php/7.3/fpm/pool.d/www.conf
 
