@@ -1,25 +1,28 @@
-FROM debian:bookworm-slim
-
-ENV DEBIAN_FRONTEND=noninteractive \
-    WORDPRESS_VERSION=6.3.2 \
-    PHP_UPLOAD_MAX_FILESIZE=64M \
-    PHP_POST_MAX_SIZE=64M \
-    PHP_MEMORY_LIMIT=256M \
-    PHP_MAX_EXECUTION_TIME=300
+# Usa Debian Buster como base
+FROM debian:buster
 
 RUN apt-get update && apt-get install -y \
-    apache2 \
-    php \
+    php-fpm \
     php-mysql \
-    adminer \
-    && rm -rf /var/lib/apt/lists/* \
-	&& ln -sf /dev/stdout /var/log/apache2/access.log \
-    && ln -sf /dev/stderr /var/log/apache2/error.log
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN a2enconf adminer
-RUN echo "Alias /adminer /usr/share/adminer/adminer" > /etc/apache2/conf-available/adminer.conf
+RUN mkdir -p /var/www/adminer
 
-EXPOSE 80
+#RUN sed -i 's/listen = \/run\/php\/php7.3-fpm.sock/listen = 9000/g' /etc/php/7.3/fpm/pool.d/www.conf
+WORKDIR /var/www/adminer
 
-# Define el punto de entrada
-CMD ["apachectl", "-D", "FOREGROUND"]
+RUN mkdir -p /run/php
+RUN chown -R www-data:www-data /var/www/adminer \
+    && chmod -R 755 /var/www/adminer
+
+
+COPY /requirements/bonus/adminer/tools/entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 9090
+
+CMD ["/entrypoint.sh"]
+
