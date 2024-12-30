@@ -1,5 +1,4 @@
-# Usa Debian Buster como base
-FROM debian:buster
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -18,10 +17,10 @@ WORKDIR /var/www/html
 RUN wp core download --allow-root
 
 COPY /requirements/wordpress/tools/wp-config.php /var/www/html/wp-config.php
-COPY /requirements/wordpress/tools/entrypoint.sh /entrypoint.sh
+COPY /requirements/wordpress/tools/entrypoint.sh /var/www/html/entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /var/www/html/entrypoint.sh
 
 EXPOSE 9000
 
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/var/www/html/entrypoint.sh"]
