@@ -14,7 +14,6 @@ RUN  curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cl
     && mv wp-cli.phar /usr/local/bin/wp
 
 
-RUN wp core download --allow-root
 
 COPY /requirements/wordpress/tools/wp-config.php /tmp/wp-config.php
 COPY /requirements/wordpress/tools/entrypoint.sh /entrypoint.sh
