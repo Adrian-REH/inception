@@ -15,9 +15,9 @@ RUN apt-get update && \
     apt-get clean
 
 # Copia los archivos de tu proyecto al contenedor
-COPY /requirements/bonus/static-page/tools/server.ts /app/
-COPY /requirements/bonus/static-page/tools/tsconfig.json /app/
-COPY /requirements/bonus/static-page/tools/package.json /app/
+COPY /requirements/bonus/paymentsrv/tools/server.ts /app/
+COPY /requirements/bonus/paymentsrv/tools/tsconfig.json /app/
+COPY /requirements/bonus/paymentsrv/tools/package.json /app/
 
 RUN npm install
 EXPOSE 3001

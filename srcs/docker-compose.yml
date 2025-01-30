@@ -98,8 +98,6 @@ services:
     container_name: staticpage
     env_file:
       - ./.env
-    ports:
-      - "3030:3030"
     networks:
       - wordpress_network
 

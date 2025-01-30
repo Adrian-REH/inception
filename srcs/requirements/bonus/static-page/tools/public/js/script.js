@@ -59,7 +59,7 @@ form.addEventListener('submit', async (event) => {
 
     // Aquí podrías enviar el token al servidor para procesar el pago
     // Ejemplo con fetch:
-    const response = await fetch('http://paymentsrv:3001/procesar-pago', {
+    const response = await fetch('https://paymentsrv.42.fr/procesar-pago', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
