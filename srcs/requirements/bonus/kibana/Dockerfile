@@ -14,7 +14,9 @@ RUN set -ex && \
 	&& groupadd -r kibana \
     && useradd -r -g kibana -d ${KIBANA_HOME} -s /sbin/nologin kibana \
 	&& tar --owner=kibana --group=kibana -xzf kibana.tar.gz --strip-components=1 -C ${KIBANA_HOME} \
-    && rm kibana.tar.gz 
+    && rm kibana.tar.gz \
+    && mkdir -p ${KIBANA_HOME}/data \
+    && chown -R kibana:kibana ${KIBANA_HOME}/data
 
 COPY /requirements/bonus/kibana/tools/kibana.yml /usr/share/kibana/config/kibana.yml
 #COPY /requirements/bonus/kibana/tools/kibana.yml /kibana/config/kibana.yml

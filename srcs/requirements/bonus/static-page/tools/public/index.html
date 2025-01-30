@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Donacion</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Columna de Formulario de Donacion -->
+    <div class="payment-column">
+      <h1>Formulario de Donacion</h1>
+      
+      <!-- Información del producto y monto -->
+      <div class="product-info">
+        <h2>Perrito Faldero</h2>
+        <p>Dona para que los perritos falderos puedan tener un mejor corte...</p>
+        
+        <p><strong>Monto a Pagar: </strong>$<span id="donation-amount">0</span></p>
+        <label for="donation-input">Monto a donar:</label>
+        <input type="number" id="donation-input" name="donation" min="1" step="0.01" placeholder="Ingresa el monto" />
+      
+    </div>
+      
+      <!-- Formulario de Donacion -->
+      <form id="payment-form" class="payment-form">
+        <div class="form-group">
+          <label for="email">Correo Electrónico:</label>
+          <input type="email" id="email" name="email" class="input-field" required>
+        </div>
+
+        <div class="form-group">
+          <label for="card-element">Tarjeta de Crédito:</label>
+          <div id="card-element" class="input-field">
+            <!-- Stripe Element -->
+          </div>
+        </div>
+
+        <button type="submit" class="submit-button">Pagar</button>
+      </form>
+    </div>
+
+    <!-- Columna de Lista de Donacions Realizados -->
+    <div class="payments-column">
+      <h1>Donacions Realizados</h1>
+      <ul id="payments-list">
+        <!-- -->
+      </ul>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -2,7 +2,12 @@
 
 set -e
 
-wp core download --allow-root
+
+
+if [ ! -f /var/www/html/wp-config.php ]; then
+	wp core download --allow-root
+fi
+
 
 cp /tmp/wp-config.php /var/www/html/wp-config.php
 echo "Config WordPress..."
