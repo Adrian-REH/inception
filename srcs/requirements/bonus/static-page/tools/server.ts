@@ -10,11 +10,11 @@ import morgan from 'morgan';
 dotenv.config();
 
 const app = express();
-app.use(morgan('combined')); // Otras opciones de formato están disponibles
+app.use(morgan('combined')); //Logging
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json()); // Esto es necesario para poder acceder a req.body
+app.use(express.json()); // Content-Type: application/json
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

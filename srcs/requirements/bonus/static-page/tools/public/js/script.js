@@ -6,20 +6,17 @@ const elements = stripe.elements();
 const donationInput = document.getElementById('donation-input');
 const donationAmountDisplay = document.getElementById('donation-amount');
 
-// Crear el elemento de la tarjeta
 const card = elements.create('card');
 card.mount('#card-element');
 
-// Manejar el envío del formulario
 const form = document.getElementById('payment-form');
 const listPayments = document.getElementById('payments-list');
 
 function addAceptedPayment() {
     const li = document.createElement('li');
-    li.classList.add('card');  // Agregar la clase card a cada elemento de la lista
+    li.classList.add('card');
     li.textContent = `Donacion de $${(parseInt(donationInput.value) || 0)} Aceptada`;
 
-    // Asignar color según el monto (por ejemplo, verde para montos positivos y rojo para montos negativos)
     li.classList.add('green');
 
     listPayments.appendChild(li);
@@ -27,11 +24,10 @@ function addAceptedPayment() {
 
 function addCancelPayment() {
     const li = document.createElement('li');
-    li.classList.add('card');  // Agregar la clase card a cada elemento de la lista
+    li.classList.add('card');
 
     li.textContent = `Donacion de $${(parseInt(donationInput.value) || 0)} Cancelada`;
 
-    // Asignar color según el monto (por ejemplo, verde para montos positivos y rojo para montos negativos)
     li.classList.add('red');
 
     listPayments.appendChild(li);
@@ -50,15 +46,11 @@ form.addEventListener('submit', async (event) => {
   // Crear el token para el pago
   const { token, error } = await stripe.createToken(card);
   if (error) {
-    // Si ocurre un error, lo mostramos en la consola
     console.error(error);
     alert('Hubo un error con el pago: ' + error.message);
   } else {
-    // Si no hay errores, podemos enviar el token al servidor
     console.log('Token:', token);
 
-    // Aquí podrías enviar el token al servidor para procesar el pago
-    // Ejemplo con fetch:
     const response = await fetch('https://paymentsrv.42.fr/procesar-pago', {
       method: 'POST',
       headers: {
@@ -72,11 +64,9 @@ form.addEventListener('submit', async (event) => {
     });
 
     if (response.ok) {
-      // Si el pago fue exitoso, redirige al usuario
         addAceptedPayment()
     } else {
         addCancelPayment()
-      // Si algo salió mal, puedes redirigir a una página de error
     }
   }
 });
