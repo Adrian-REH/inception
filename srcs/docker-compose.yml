@@ -73,13 +73,12 @@ services:
   #     - GF_SECURITY_ADMIN_PASSWORD=admin # Cambia esto en producción
   #   restart: always
 
-
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node-exporter
-    networks:
-      - metrics_network
-    restart: always
+  # node-exporter:
+  #   image: prom/node-exporter:latest
+  #   container_name: node-exporter
+  #   networks:
+  #     - metrics_network
+  #   restart: always
 
   staticpage:
     build:
@@ -104,8 +103,10 @@ services:
     networks:
       - wordpress_network
     depends_on: # Dependencias de wordpress
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     # logging: # Configuración de logs
     #   driver: "gelf"
     #   options:
@@ -119,16 +120,23 @@ services:
     restart: always
     ports:
       - "443:443"
-      - "80:80"
     volumes:
       - /home/adherrer/data:/var/www/html
       - /home/adherrer/adminer:/var/www/adminer
     depends_on:
-      - adminer
-      - wordpress
+      adminer:
+        condition: service_healthy
+      wordpress:
+        condition: service_healthy
+        restart: true
     networks:
       - wordpress_network
       - metrics_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/wp-login.php"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
     # logging: # Configuración de logs
     #   driver: "gelf"
     #   options:
@@ -139,12 +147,18 @@ services:
       context: .
       dockerfile: ./requirements/mariadb/Dockerfile
     container_name: mariadb
+    restart: always
     env_file:
       - ./.env
     networks:
       - wordpress_network
     volumes:
       - /home/adherrer/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+
 
   adminer:
     build:
@@ -164,6 +178,7 @@ services:
       dockerfile: ./requirements/bonus/ftp-service/Dockerfile
     env_file:
       - ./.env
+    restart: always
     ports:
       - "21:21"
       - "20:20"
