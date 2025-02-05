@@ -192,7 +192,7 @@ services:
     container_name: redis
     build:
       context: .
-      dockerfile:  /requirements/bonus/redis/Dockerfile
+      dockerfile:  ./requirements/bonus/redis/Dockerfile
     networks:
       - wordpress_network
     ports:
