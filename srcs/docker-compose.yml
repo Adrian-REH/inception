@@ -79,39 +79,6 @@ services:
   #   networks:
   #     - metrics_network
   #   restart: always
-
-  staticpage:
-    build:
-      context: .
-      dockerfile: ./requirements/bonus/static-page/Dockerfile
-    container_name: staticpage
-    env_file:
-      - ./.env
-    networks:
-      - wordpress_network
-
-  wordpress:
-    build:
-      context: .
-      dockerfile: ./requirements/wordpress/Dockerfile
-    container_name: wordpress
-    restart: always
-    env_file:
-      - ./.env
-    volumes:
-      - /home/adherrer/data:/var/www/html
-    networks:
-      - wordpress_network
-    depends_on: # Dependencias de wordpress
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    # logging: # Configuración de logs
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://127.0.0.1:5044"
-
   nginx:
     build:
       context: .
@@ -132,10 +99,34 @@ services:
     networks:
       - wordpress_network
       - metrics_network
+
+    # logging: # Configuración de logs
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://127.0.0.1:5044"
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: ./requirements/wordpress/Dockerfile
+    container_name: wordpress
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - /home/adherrer/data:/var/www/html
+    networks:
+      - wordpress_network
+    depends_on: # Dependencias de wordpress
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/wp-login.php"]
-      interval: 10s
-      retries: 5
+      test: ["CMD", "pgrep", "php-fpm"]
+      interval: 30s
+      retries: 3
+      start_period: 5s
       timeout: 5s
     # logging: # Configuración de logs
     #   driver: "gelf"
@@ -158,7 +149,15 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
-
+  staticpage:
+    build:
+      context: .
+      dockerfile: ./requirements/bonus/static-page/Dockerfile
+    container_name: staticpage
+    env_file:
+      - ./.env
+    networks:
+      - wordpress_network
 
   adminer:
     build:
@@ -170,7 +169,13 @@ services:
       - /home/adherrer/adminer:/var/www/adminer
     networks:
       - wordpress_network
-      
+    healthcheck:
+      test: ["CMD", "pgrep", "php-fpm"]
+      interval: 30s
+      retries: 3
+      start_period: 5s
+      timeout: 5s
+
   ftp:
     container_name: ftp
     build:
@@ -180,9 +185,7 @@ services:
       - ./.env
     restart: always
     ports:
-      - "21:21"
-      - "20:20"
-      - "21100-21110:21100-21110"
+      - "2222:2121"
     volumes:
       - /home/adherrer/data:/var/www/html
     networks:
@@ -200,6 +203,7 @@ services:
     env_file:
       - ./.env
 
+
 volumes:
   test_data:
   ls_data:
@@ -212,3 +216,5 @@ networks:
     driver: bridge
   metrics_network:
     driver: bridge
+  default:
+    driver: host

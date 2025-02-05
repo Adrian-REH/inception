@@ -7,8 +7,8 @@ if [ ! -f "/etc/vsftpd/vsftpd.conf.bak" ]; then
     mkdir -p /var/www/html
 
     # Hacer una copia de seguridad del archivo de configuración y mover el nuevo archivo
-    cp /etc/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
-    mv /tmp/vsftpd.conf /etc/vsftpd/vsftpd.conf
+    cp ./etc/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
+    cp ./tmp/vsftpd.conf /etc/vsftpd.conf
 
     # Crear el usuario FTP, configurar la contraseña y dar permisos sobre el directorio de WordPress
     adduser $FTP_USR --disabled-password --gecos ""  # --gecos para evitar una pregunta interactiva
@@ -20,5 +20,5 @@ if [ ! -f "/etc/vsftpd/vsftpd.conf.bak" ]; then
 fi
 
 # Iniciar el servicio FTP
-echo "FTP started on :21"
+echo "FTP started on :2121"
 /usr/sbin/vsftpd /etc/vsftpd.conf
