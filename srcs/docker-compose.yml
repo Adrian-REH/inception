@@ -88,8 +88,8 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /home/adherrer/data:/var/www/html
-      - /home/adherrer/adminer:/var/www/adminer
+      - vo_data:/var/www/html
+      - vo_adminer:/var/www/adminer
     depends_on:
       adminer:
         condition: service_healthy
@@ -114,7 +114,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - /home/adherrer/data:/var/www/html
+      - vo_data:/var/www/html
     networks:
       - wordpress_network
     depends_on: # Dependencias de wordpress
@@ -144,7 +144,7 @@ services:
     networks:
       - wordpress_network
     volumes:
-      - /home/adherrer/mysql:/var/lib/mysql
+      - vo_db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -177,7 +177,7 @@ services:
     container_name: adminer
     restart: always
     volumes:
-      - /home/adherrer/adminer:/var/www/adminer
+      - vo_adminer:/var/www/adminer
     networks:
       - wordpress_network
     healthcheck:
@@ -198,7 +198,7 @@ services:
     ports:
       - "2222:2121"
     volumes:
-      - /home/adherrer/data:/var/www/html
+      - vo_data:/var/www/html
     networks:
       - wordpress_network
 
@@ -216,11 +216,24 @@ services:
 
 
 volumes:
-  test_data:
-  ls_data:
-  wp_data:
-  kb_data:
-  db_data:
+  vo_adminer:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/adherrer/adminer
+  vo_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/adherrer/data
+  vo_db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/adherrer/mysql
 
 networks:
   wordpress_network:
