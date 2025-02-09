@@ -149,11 +149,22 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
+
   staticpage:
     build:
       context: .
       dockerfile: ./requirements/bonus/static-page/Dockerfile
     container_name: staticpage
+    env_file:
+      - ./.env
+    networks:
+      - wordpress_network
+
+  paymentsrv:
+    build:
+      context: .
+      dockerfile: ./requirements/bonus/paymentsrv/Dockerfile
+    container_name: paymentsrv
     env_file:
       - ./.env
     networks:
