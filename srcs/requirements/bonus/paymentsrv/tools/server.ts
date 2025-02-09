@@ -11,12 +11,14 @@ const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-01-27.acacia" });
 app.use(morgan('combined')); // Otras opciones de formato están disponibles
 
-/* app.use(cors({
+ app.use(cors({
   origin: 'https://staticpage.42.fr', // Cambia esto por la URL de tu frontend en producción
-  methods: ['GET', 'POST'], // Métodos permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'] // Headers permitidos
-}));app.use(express.json()); // Esto es necesario para poder acceder a req.body
- */
+  methods: ['POST'], // Métodos permitidos
+  allowedHeaders: ['Content-Type', 'Origin'], // Headers permitidos
+  credentials:true
+}));
+app.use(express.json()); // Esto es necesario para poder acceder a req.body
+
 app.post('/procesar-pago', async (Request, Response) => {
     const { token, amount, email } = Request.body;
     console.log(amount)
