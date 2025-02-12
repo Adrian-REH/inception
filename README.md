@@ -16,6 +16,5 @@
  docker stop $(docker ps -aq) && \
  docker rm $(docker ps -aq) && \
  docker rmi $(docker images -aq) && \
-
-docker-compose down --volumes --rmi all --remove-orphans
+docker volume rm $(docker volume ls -q)
 
