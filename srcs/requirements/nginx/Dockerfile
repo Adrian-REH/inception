@@ -16,7 +16,7 @@ COPY /requirements/nginx/tools/default.conf /etc/nginx/conf.d/default.conf
 COPY /requirements/nginx/tools/certs /etc/nginx/certs
 
 # Expone el puerto 443
-EXPOSE 443 80
+EXPOSE 443
 
 # Inicia Nginx en primer plano
 CMD ["nginx", "-g", "daemon off;"]
