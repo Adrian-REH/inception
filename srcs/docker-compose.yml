@@ -240,4 +240,5 @@ volumes:
 
 networks:
   wordpress_network:
+    name: wordpress_network
     driver: bridge
