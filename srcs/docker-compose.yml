@@ -79,8 +79,10 @@ services:
   #   networks:
   #     - metrics_network
   #   restart: always
+
   nginx:
     build:
+      name: nginx
       context: .
       dockerfile: ./requirements/nginx/Dockerfile
     container_name: nginx
@@ -98,7 +100,6 @@ services:
         restart: true
     networks:
       - wordpress_network
-      - metrics_network
 
     # logging: # Configuración de logs
     #   driver: "gelf"
@@ -135,6 +136,7 @@ services:
 
   db:
     build:
+      name: db
       context: .
       dockerfile: ./requirements/mariadb/Dockerfile
     container_name: mariadb
@@ -144,7 +146,7 @@ services:
     networks:
       - wordpress_network
     volumes:
-      - vo_db:/var/lib/mysql
+      - vo_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -152,6 +154,7 @@ services:
 
   staticpage:
     build:
+      name: staticpage
       context: .
       dockerfile: ./requirements/bonus/static-page/Dockerfile
     container_name: staticpage
@@ -162,6 +165,7 @@ services:
 
   paymentsrv:
     build:
+      name: paymentsrv
       context: .
       dockerfile: ./requirements/bonus/paymentsrv/Dockerfile
     container_name: paymentsrv
@@ -172,6 +176,7 @@ services:
 
   adminer:
     build:
+      name: adminer
       context: .
       dockerfile: ./requirements/bonus/adminer/Dockerfile
     container_name: adminer
@@ -190,6 +195,7 @@ services:
   ftp:
     container_name: ftp
     build:
+      name: ftp
       context: .
       dockerfile: ./requirements/bonus/ftp-service/Dockerfile
     env_file:
@@ -205,6 +211,7 @@ services:
   redis:
     container_name: redis
     build:
+      name: redis
       context: .
       dockerfile:  ./requirements/bonus/redis/Dockerfile
     networks:
@@ -217,28 +224,20 @@ services:
 
 volumes:
   vo_adminer:
+    name: vo_adminer
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /home/adherrer/adminer
   vo_data:
+    name: vo_data
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /home/adherrer/data
-  vo_db:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/adherrer/mysql
 
 networks:
   wordpress_network:
     driver: bridge
-  metrics_network:
-    driver: bridge
-  default:
-    driver: host
