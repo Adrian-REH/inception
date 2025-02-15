@@ -20,16 +20,36 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', getenv('DB_NAME') );
 
+
+$db_name = getenv('DB_NAME');
+if (!$db_name) {
+    error_log('La variable de entorno DB_HOST no está definida.');
+}
+echo "$db_name:wp_db\n";
+define( 'DB_NAME', "$db_name" );
 /** MySQL database username */
-define( 'DB_USER', getenv('DB_USER') );
-
+$db_user = getenv('DB_USER');
+if (!$db_user) {
+	error_log('La variable de entorno DB_HOST no está definida.');
+}
+echo "$db_user:adherrers\n";
+define( 'DB_USER', "$db_user" );
 /** MySQL database password */
-define( 'DB_PASSWORD', getenv('DB_PASSWORD') );
+$db_pass = getenv('DB_PASSWORD');
+if (!$db_pass) {
+	error_log('La variable de entorno DB_HOST no está definida.');
+}
+echo "$db_pass:adherrer2323\n";
+define( 'DB_PASSWORD', "$db_pass");
 
+$db_host = getenv('DB_HOST');
+if (!$db_host) {
+	error_log('La variable de entorno DB_HOST no está definida.');
+}
 /** MySQL hostname */
-define( 'DB_HOST', getenv('DB_HOST') );
+echo "$db_host:db:3306\n";
+define( 'DB_HOST', "$db_host");
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );

@@ -53,6 +53,7 @@ wp plugin update --all --allow-root
 wp redis enable --allow-root
 
 sed -i 's/listen = \/run\/php\/php8.2-fpm.sock/listen = 9000/g' /etc/php/8.2/fpm/pool.d/www.conf
+sed -i 's/;clear_env = no/clear_env = no/' /etc/php/8.2/fpm/pool.d/www.conf
 
 mkdir -p /run/php
 # Inicia PHP-FPM
