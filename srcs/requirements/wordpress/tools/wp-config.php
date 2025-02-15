@@ -26,21 +26,18 @@ $db_name = getenv('DB_NAME');
 if (!$db_name) {
     error_log('La variable de entorno DB_HOST no está definida.');
 }
-echo "$db_name:wp_db\n";
 define( 'DB_NAME', "$db_name" );
 /** MySQL database username */
 $db_user = getenv('DB_USER');
 if (!$db_user) {
 	error_log('La variable de entorno DB_HOST no está definida.');
 }
-echo "$db_user:adherrers\n";
 define( 'DB_USER', "$db_user" );
 /** MySQL database password */
 $db_pass = getenv('DB_PASSWORD');
 if (!$db_pass) {
 	error_log('La variable de entorno DB_HOST no está definida.');
 }
-echo "$db_pass:adherrer2323\n";
 define( 'DB_PASSWORD', "$db_pass");
 
 $db_host = getenv('DB_HOST');
@@ -48,7 +45,6 @@ if (!$db_host) {
 	error_log('La variable de entorno DB_HOST no está definida.');
 }
 /** MySQL hostname */
-echo "$db_host:db:3306\n";
 define( 'DB_HOST', "$db_host");
 
 /** Database Charset to use in creating database tables. */
