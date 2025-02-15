@@ -42,10 +42,15 @@ else
 	fi
 fi
 
+chown -R www-data:www-data /var/www/html
 # Instala y activa el tema
 wp theme install astra --activate --allow-root
 
 # Instala y activa plugins
+wp config set WP_REDIS_HOST redis --allow-root
+wp config set WP_REDIS_PORT 6379 --allow-root
+wp config set WP_CACHE_KEY_SALT $DOMAIN_NAME --allow-root
+wp config set WP_REDIS_CLIENT phpredis --allow-root
 wp plugin install redis-cache --activate --allow-root
 wp plugin update --all --allow-root
 
@@ -54,9 +59,10 @@ wp redis enable --allow-root
 
 sed -i 's/listen = \/run\/php\/php8.2-fpm.sock/listen = 9000/g' /etc/php/8.2/fpm/pool.d/www.conf
 sed -i 's/;clear_env = no/clear_env = no/' /etc/php/8.2/fpm/pool.d/www.conf
-
 mkdir -p /run/php
 # Inicia PHP-FPM
 echo "Iniciando PHP-FPM..."
+
+
 
 exec "$@"
