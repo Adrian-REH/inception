@@ -1,7 +1,7 @@
 # Description memory
 
 ## Infra-structure diagram
-![Infraestructura Desactualizada](image.png)
+![Infraestructura Desactualizada](inception-infra.png)
 
 
 
